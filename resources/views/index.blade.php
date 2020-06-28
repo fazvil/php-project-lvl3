@@ -90,7 +90,7 @@
             </div>
         </div>
         @php
-            print_r(phpinfo());
+            print_r(env('DATABASE_URL'));
         @endphp
    
 
