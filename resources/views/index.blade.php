@@ -89,6 +89,10 @@
                 </div>
             </div>
         </div>
+        @php
+            print_r(phpinfo());
+        @endphp
+   
 
         <footer>
             <div class="created">
