@@ -89,11 +89,6 @@
                 </div>
             </div>
         </div>
-        @php
-            print_r(getenv('DATABASE_URL'));
-        @endphp
-   
-
         <footer>
             <div class="created">
                 created by Vildan Fazlyev
