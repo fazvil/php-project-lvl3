@@ -28,13 +28,13 @@ jobs:
           mkdir -p database
           touch database/database.sqlite
           
-      - name: Execute tests (Unit and Feature tests) via PHPUnit
+      - name: Create table
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
         run: php artisan migrate
         
-      - name: test
+      - name: Execute tests (Unit and Feature tests) via PHPUnit
         run: make test
         
       - name: Run linter
