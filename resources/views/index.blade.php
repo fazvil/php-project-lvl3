@@ -12,7 +12,7 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-        <link href="{{ asset('/css/style.css') }}" rel="stylesheet">
+        <link href="{{ asset('/css/style.css') }}" type="text/css" rel="stylesheet">
     </head>
     
     <body>
