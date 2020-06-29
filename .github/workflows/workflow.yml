@@ -14,9 +14,6 @@ jobs:
       - name: Setup project
         run: make setup 
         
-      - name: Run linter
-        run: make lint
-        
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
         
@@ -36,3 +33,6 @@ jobs:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
         run: php artisan migrate
+        
+      - name: Run linter
+        run: make lint
