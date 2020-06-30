@@ -7,7 +7,7 @@ use Carbon\Carbon;
 
 Route::get('/', function () {
     return view('index');
-});
+})->name('index');
 
 Route::get('/domains', function () {
     $domains = DB::table('domains')->get();

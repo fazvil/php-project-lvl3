@@ -6,8 +6,8 @@
     </head>
     <body>
         <header>
-            <a href="/">Home</a>
-            <a href="/domains">Domains</a>
+            <a href="{{ route('index') }}">Home</a>
+            <a href="{{ route('domains.index') }}">Domains</a>
         </header>
         <h2> Site: {{ $user->name }}</h2>
         <div class="full-height">

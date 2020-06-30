@@ -23,8 +23,8 @@
         @endphp
         @include('flash::message') 
         <header>
-            <a href="/">Home</a>
-            <a href="/domains">Domains</a>
+            <a href="{{ route('index') }}">Home</a>
+            <a href="{{ route('domains.index') }}">Domains</a>
         </header>
 
         <div class="flex-center position-ref full-height">
@@ -34,9 +34,9 @@
                 </div>
                 <p class="lead">Check web pages for free</p>
                 <div>
-                    <form action="/domains" method="POST">
+                    <form action="{{ route('domains.store') }}" method="POST">
                         @csrf
-                        <input type="text" name="domain" placeholder="http://www.google.com">
+                        <input type="text" name="domain" placeholder="https://www.google.com">
                         <input type="submit" value="CHECK">
                     </form>
                 </div>

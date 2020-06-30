@@ -5,8 +5,8 @@
     </head>
     <body>
         <header>
-            <a href="/">Home</a>
-            <a href="/domains">Domains</a>
+            <a href="{{ route('index') }}">Home</a>
+            <a href="{{ route('domains.index') }}">Domains</a>
         </header>
         <div class="full-height">
             <table>
@@ -16,7 +16,7 @@
                             {{ $item->id }}
                         </td>
                         <td>
-                            <a href="/domains/{{ $item->id }}">{{ $item->name }}</a>
+                            <a href="{{ route('domains.show', ['id' => $item->id]) }}">{{ $item->name }}</a>
                         </td>
                     </tr>
                 @endforeach
