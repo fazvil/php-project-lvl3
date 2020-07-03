@@ -10,6 +10,11 @@
         </header>
         <div class="full-height">
             <table>
+                <tr>
+                    <td class="columnId">ID</td>
+                    <td class="columnId">Name</td>
+                    <td class="columnId">Last check</td>
+                </tr>
                 @foreach ($domains as $item)
                     <tr>
                         <td>
@@ -18,9 +23,14 @@
                         <td>
                             <a href="{{ route('domains.show', ['id' => $item->id]) }}">{{ $item->name }}</a>
                         </td>
+                        <td>
+                            @isset($lastChecks[$item->id])
+                                {{ $lastChecks[$item->id] }}
+                            @endisset
+                        </td>
                     </tr>
                 @endforeach
-            </table>
+            </table>    
         </div>
         <footer>
             <div class="created">

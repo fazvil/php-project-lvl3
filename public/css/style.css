@@ -1,5 +1,5 @@
 html, body {
-    background-color: #fff;
+    background-color: ivory;
     color: #636b6f;
     font-family: 'Nunito', sans-serif;
     font-weight: 100vh;
@@ -43,4 +43,33 @@ html, body {
 .created {
     margin-left: 20px;
     font-size: 15px;
+}
+
+table {
+    width: 100%;
+    border-style: hidden;
+    font-size: 18px;
+}
+
+td {
+    border-style: solid;
+    border-width: 1px;
+    border-color: darkgray;
+    padding: 3px;
+}
+
+.button {
+    background: cornflowerblue;
+    color: white;
+    border-style: hidden;
+    padding: 3px;
+    width: 110px;
+}
+
+.button:hover {
+    background: darkcyan;
+}
+
+.columnId {
+    font-weight: bold;
 }

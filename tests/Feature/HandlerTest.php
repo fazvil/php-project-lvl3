@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Faker\Factory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 class HandlerTest extends TestCase
 {
@@ -19,7 +20,7 @@ class HandlerTest extends TestCase
 
     public function testIndex()
     {
-        $response = $this->get('/');
+        $response = $this->get(route('index'));
         $response->assertOk();
     }
 
@@ -27,9 +28,10 @@ class HandlerTest extends TestCase
     {
         $faker = Factory::create();
         $url = $faker->url;
-        $response = $this->post('/domains', ['domain' => $url]);
+        $response = $this->post(route('domains.store'), ['domain' => $url]);
         $response->assertSessionHasNoErrors();
         $response->assertRedirect();
+
         $this->assertDatabaseHas('domains', [
             'name' => $url
         ]);
@@ -38,21 +40,32 @@ class HandlerTest extends TestCase
     public function testDomainsIndex()
     {
         $faker = Factory::create();
-        $this->post('/domains', ['domain' => $faker->url]);
-        $this->post('/domains', ['domain' => $faker->url]);
-        $response = $this->get('/domains');
+        $this->post(route('domains.store'), ['domain' => $faker->url]);
+        $this->post(route('domains.store'), ['domain' => $faker->url]);
+        $response = $this->get(route('domains.index'));
         $response->assertOk();
+
         $this->assertDatabaseCount('domains', 2);
     }
     
     public function testShow()
+    {     
+        $faker = Factory::create();
+        $url = $faker->url;
+        $this->post(route('domains.store'), ['domain' => $url]);
+        $id = DB::table('domains')->where('name', $url)->value('id');
+        $response = $this->get(route('domains.store', ['id', $id]));
+        $response->assertOk();
+    }
+    
+    public function testChecks()
     {
-        
         $faker = Factory::create();
         $url = $faker->url;
         $this->post('/domains', ['domain' => $url]);
         $id = DB::table('domains')->where('name', $url)->value('id');
-        $response = $this->get("/domains/{$id}");
-        $response->assertOk();
+        $response = $this->post(route('domains.checks', ['id' => $id]));
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect();
     }
 }

@@ -9,16 +9,35 @@
             <a href="{{ route('index') }}">Home</a>
             <a href="{{ route('domains.index') }}">Domains</a>
         </header>
-        <h2> Site: {{ $user->name }}</h2>
+        <h2> Site: {{ $entity->name }}</h2>
         <div class="full-height">
             <table>
-                @foreach ($user as $key => $value)
+                @foreach ($entity as $key => $value)
                     <tr>
                         <td> {{ $key }} </td>
                         <td> {{ $value }} </td>
                     </tr>
                 @endforeach
             </table>
+            <h3>Checks</h3>
+            <form action="{{ route('domains.checks', ['id' => $entity->id]) }}" method="POST">
+                @csrf
+                <input class="button" type="submit" value="Run check">
+            </form>
+            <div>
+            <table>
+                @foreach ($checks as $item)
+                    <tr>
+                        <td>
+                            {{ $item->status_code }}
+                        </td>
+                        <td>
+                            {{ $item->created_at }}
+                        </td>
+                    </tr>
+                @endforeach
+            </table>
+            </div>
         </div>
         <footer>
             <div class="created">
