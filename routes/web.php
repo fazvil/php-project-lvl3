@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -42,13 +43,15 @@ Route::get('/domains/{id}', function ($id) {
 })->name('domains.show');
 
 Route::post('/domains/{id}/checks', function ($id) {
+    $domain = DB::table('domains')
+        ->where('id', $id)
+        ->value('name');
+    $response_status = Http::get($domain)->status();
+
     DB::table('domain_checks')->insert(
         [
             'domain_id' => $id,
-            'status_code' => 200,
-            'h1' => 'f',
-            'keywords' => 'f',
-            'description' => 'f',
+            'status_code' => $response_status,
             'created_at' => Carbon::now()->toDateTimeString(),
             'updated_at' => Carbon::now()->toDateTimeString()
         ]
