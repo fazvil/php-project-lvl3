@@ -14,6 +14,7 @@
                     <td class="columnId">ID</td>
                     <td class="columnId">Name</td>
                     <td class="columnId">Last check</td>
+                    <td class="columnId">Status Code</td>
                 </tr>
                 @foreach ($domains as $item)
                     <tr>
@@ -26,6 +27,11 @@
                         <td>
                             @isset($lastChecks[$item->id])
                                 {{ $lastChecks[$item->id] }}
+                            @endisset
+                        </td>
+                        <td>
+                            @isset($statusCode[$item->id])
+                                {{ $statusCode[$item->id] }}
                             @endisset
                         </td>
                     </tr>

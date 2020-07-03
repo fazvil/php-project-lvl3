@@ -14,7 +14,12 @@ Route::get('/', function () {
 Route::get('/domains', function () {
     $domains = DB::table('domains')->get();
     $lastChecks = DB::table('domain_checks')->pluck('created_at', 'domain_id');
-    return view('domains.index', ['domains' => $domains, 'lastChecks' => $lastChecks]);
+    $statusCode = DB::table('domain_checks')->pluck('status_code', 'domain_id');
+    return view('domains.index', [
+        'domains' => $domains,
+        'lastChecks' => $lastChecks,
+        'statusCode' => $statusCode
+        ]);
 })->name('domains.index');
 
 Route::post('/domains', function (Request $request) {

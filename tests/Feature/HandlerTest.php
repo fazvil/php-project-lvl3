@@ -8,6 +8,7 @@ use Tests\TestCase;
 use Faker\Factory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Http;
 
 class HandlerTest extends TestCase
 {
@@ -60,6 +61,7 @@ class HandlerTest extends TestCase
     
     public function testChecks()
     {
+        Http::fake();
         $faker = Factory::create();
         $url = $faker->url;
         $this->post('/domains', ['domain' => $url]);
