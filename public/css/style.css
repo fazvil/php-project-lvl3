@@ -1,54 +1,21 @@
 html, body {
-    background-color: ivory;
     color: #636b6f;
     font-family: 'Nunito', sans-serif;
-    font-weight: 100vh;
     height: 100vh;
-    margin: 5px;
     font-size: 20px;
-}
-
-.full-height {
-    height: 90vh;
+    margin: 4px;
 }
 
 .flex-center {
     align-items: center;
     display: flex;
     justify-content: center;
-}
-
-.position-ref {
-    position: relative;
-}
-
-.content {
-    text-align: center;
-}
-
-.title {
-    font-size: 50px;
-}
-
-.links > a {
-    color: #636b6f;
-    padding: 0 25px;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: .1rem;
-    text-decoration: none;
-    text-transform: uppercase;
-}
-
-.created {
-    margin-left: 20px;
-    font-size: 15px;
+    height: 90vh;
 }
 
 table {
     width: 100%;
     border-style: hidden;
-    font-size: 18px;
 }
 
 td {
@@ -72,4 +39,32 @@ td {
 
 .columnId {
     font-weight: bold;
+}
+
+h1 {
+    font-size: 50px;
+    color: black;
+}
+
+.full-height {
+    height: 90vh;
+}
+
+footer {
+    font-size: 16px;
+    text-align: center;
+}
+
+header {
+    padding: 15px;
+    background: whitesmoke;
+}
+
+header > a:hover {
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.domains > tbody tr:hover {
+    background: whitesmoke;
 }

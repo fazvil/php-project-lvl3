@@ -6,20 +6,34 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use DiDom\Document;
+use DiDom\Query;
 
 Route::get('/', function () {
     return view('index');
 })->name('index');
 
 Route::get('/domains', function () {
-    $domains = DB::table('domains')->get();
+    /*
+    $latestChecks = DB::table('domain_checks')
+                   ->select('domain_id', DB::raw('MAX(created_at) as last_check'))
+                   ->groupBy('domain_id');
+    $domains = DB::table('domains')
+        ->leftJoinSub($latestChecks, 'latest_check', function ($join) {
+            $join->on('domains.id', '=', 'latest_check.domain_id');
+        })->get();
+    */
+    
+    $domains = DB:: table('domains')->get();
+
     $lastChecks = DB::table('domain_checks')->pluck('created_at', 'domain_id');
-    $statusCode = DB::table('domain_checks')->pluck('status_code', 'domain_id');
+    $statusCodes = DB::table('domain_checks')->pluck('status_code', 'domain_id');
+
     return view('domains.index', [
         'domains' => $domains,
         'lastChecks' => $lastChecks,
-        'statusCode' => $statusCode
-        ]);
+        'statusCodes' => $statusCodes
+    ]);
 })->name('domains.index');
 
 Route::post('/domains', function (Request $request) {
@@ -27,16 +41,31 @@ Route::post('/domains', function (Request $request) {
         'domain' => 'required|url'
     ]);
     $domain = Str::lower($validatedData['domain']);
-    DB::table('domains')->insertOrIgnore(
-        [
-            'name' => $domain,
-            'created_at' => Carbon::now()->toDateTimeString(),
-            'updated_at' => Carbon::now()->toDateTimeString()
-        ]
-    );
-    flash('Url has been added')->success();
+    if (DB::table('domains')->where('name', $domain)->exists()) {
+        flash('Url already exists')->success();
+    } else {
+        DB::table('domains')->insert(
+            [
+                'name' => $domain,
+                'created_at' => Carbon::now()->toDateTimeString(),
+                'updated_at' => Carbon::now()->toDateTimeString()
+            ]
+        );
+        flash('Url has been added')->success();
+    }
+    /*
+    $document = new Document($domain, true);
+    $elements = $document->html();
+    dump($elements);
+    
+    if (count($elements) > 0) {
+        dump($elements);
+    }
+    return 'no';
+    */
     $id = DB::table('domains')->where('name', $domain)->value('id');
     return redirect()->route('domains.show', ['id' => $id]);
+    
 })->name('domains.store');
 
 Route::get('/domains/{id}', function ($id) {
@@ -61,5 +90,6 @@ Route::post('/domains/{id}/checks', function ($id) {
             'updated_at' => Carbon::now()->toDateTimeString()
         ]
     );
+    flash('Website has been checked!')->success();
     return redirect()->route('domains.show', ['id' => $id]);
 })->name('domains.checks');
