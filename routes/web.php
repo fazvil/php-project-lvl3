@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use DiDom\Document;
-use DiDom\Query;
 
 Route::get('/', function () {
     return view('index');
@@ -53,19 +52,9 @@ Route::post('/domains', function (Request $request) {
         );
         flash('Url has been added')->success();
     }
-    /*
-    $document = new Document($domain, true);
-    $elements = $document->html();
-    dump($elements);
-    
-    if (count($elements) > 0) {
-        dump($elements);
-    }
-    return 'no';
-    */
+
     $id = DB::table('domains')->where('name', $domain)->value('id');
     return redirect()->route('domains.show', ['id' => $id]);
-    
 })->name('domains.store');
 
 Route::get('/domains/{id}', function ($id) {
@@ -80,12 +69,29 @@ Route::post('/domains/{id}/checks', function ($id) {
     $domain = DB::table('domains')
         ->where('id', $id)
         ->value('name');
+
     $response_status = Http::get($domain)->status();
+
+    $document = new Document($domain, true);
+    if ($document->has('h1')) {
+        $h1 = $document->first('h1')->text();
+    }
+
+    if ($document->has('meta[name=keywords][content]')) {
+        $keywords = $document->first('meta[name=keywords][content]')->getAttribute('content');
+    }
+
+    if ($document->has('meta[name=description][content]')) {
+        $description = $document->first('meta[name=description][content]')->getAttribute('content');
+    }
 
     DB::table('domain_checks')->insert(
         [
             'domain_id' => $id,
             'status_code' => $response_status,
+            'h1' => $h1 ?? null,
+            'keywords' => $keywords ?? null,
+            'description' => $description ?? null,
             'created_at' => Carbon::now()->toDateTimeString(),
             'updated_at' => Carbon::now()->toDateTimeString()
         ]

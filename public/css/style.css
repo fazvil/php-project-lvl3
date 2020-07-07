@@ -18,6 +18,10 @@ table {
     border-style: hidden;
 }
 
+.check {
+    font-size: 16px;
+}
+
 td {
     border-style: solid;
     border-width: 1px;
@@ -65,6 +69,6 @@ header > a:hover {
     font-weight: 700;
 }
 
-.domains > tbody tr:hover {
+tbody tr:hover {
     background: whitesmoke;
 }
