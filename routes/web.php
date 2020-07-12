@@ -69,13 +69,14 @@ Route::get('/domains/{id}', function ($id) {
 
 Route::post('/domains/{id}/checks', function ($id) {
     $domain = DB::table('domains')->find($id);
-    dump('ff');
-    /*
 
     $data = Http::get($domain->name);
     $response_body = $data->body();
     $response_status = $data->status();
-    
+    dump('ff');
+
+    /*
+
     $document = new Document($response_body);
     
     if ($document->has('h1')) {
