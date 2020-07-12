@@ -10,8 +10,11 @@ use DiDom\Document;
 use GuzzleHttp\Client;
 
 Route::get('/', function () {
-    Http::fake();
+    $data = Http::get('https://www.google.com')->status();
+    dump($data);
+    /*
     return view('index');
+    */
 })->name('index');
 
 Route::get('/domains', function () {
