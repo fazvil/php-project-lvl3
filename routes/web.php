@@ -69,7 +69,7 @@ Route::get('/domains/{id}', function ($id) {
 
 Route::post('/domains/{id}/checks', function ($id) {
     $domain = DB::table('domains')->find($id);
-    dump('f');
+    dump('ff');
     /*
 
     $data = Http::get($domain->name);
