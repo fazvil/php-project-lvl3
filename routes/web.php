@@ -68,9 +68,10 @@ Route::get('/domains/{id}', function ($id) {
 })->name('domains.show');
 
 Route::post('/domains/{id}/checks', function ($id) {
-    $domain = DB::table('domains')->find($id);
-    $data = Http::get('$domain->name');
-
+    
+    $domain = DB::table('domains')->find($id); 
+    
+    $data = Http::get($domain->name);
     $response_body = $data->body();
     $response_status = $data->status();
 
