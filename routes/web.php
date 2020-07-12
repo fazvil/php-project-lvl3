@@ -73,7 +73,7 @@ Route::post('/domains/{id}/checks', function ($id) {
     $data = Http::get($domain->name);
     $response_body = $data->body();
     $response_status = $data->status();
-    dump('ff');
+    dump('fff');
 
     /*
 
