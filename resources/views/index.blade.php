@@ -15,7 +15,7 @@
             <div>
                 <form action="{{ route('domains.store') }}" method="POST">
                     @csrf
-                    <input type="url" name="domain" value="" placeholder="https://www.google.com">
+                    <input type="url" name="domainName" value="" placeholder="https://www.google.com">
                     <input class="button" type="submit" value="CHECK">
                 </form>
             </div>

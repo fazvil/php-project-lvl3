@@ -4,9 +4,9 @@
 
 @section('container')
     <div class="full-height">
-    <h2> Site: {{ $entity->name }}</h2>
+    <h2> Site: {{ $domain->name }}</h2>
         <table>
-            @foreach ($entity as $key => $value)
+            @foreach ($domain as $key => $value)
                 <tr>
                     <td> {{ $key }} </td>
                     <td> {{ $value }} </td>
@@ -14,7 +14,7 @@
             @endforeach
         </table>
         <h3>Checks</h3>
-        <form action="{{ route('domains.checks', ['id' => $entity->id]) }}" method="POST">
+        <form action="{{ route('domains.checks', ['id' => $domain->id]) }}" method="POST">
             @csrf
             <input class="button" type="submit" value="Run check">
         </form>
