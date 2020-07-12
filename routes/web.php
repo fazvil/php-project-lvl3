@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use DiDom\Document;
+use GuzzleHttp\Client;
 
 Route::get('/', function () {
     return view('index');
@@ -23,7 +24,7 @@ Route::get('/domains', function () {
         })->get();
     */
     
-    $domains = DB:: table('domains')->get();
+    $domains = DB::table('domains')->get();
 
     $lastChecks = DB::table('domain_checks')->pluck('created_at', 'domain_id');
     $statusCodes = DB::table('domain_checks')->pluck('status_code', 'domain_id');
@@ -37,15 +38,16 @@ Route::get('/domains', function () {
 
 Route::post('/domains', function (Request $request) {
     $validatedData = $request->validate([
-        'domain' => 'required|url'
+        'domainName' => 'required|url'
     ]);
-    $domain = Str::lower($validatedData['domain']);
-    if (DB::table('domains')->where('name', $domain)->exists()) {
-        flash('Url already exists')->success();
+    $domainName = Str::lower($validatedData['domainName']);
+    
+    if (DB::table('domains')->where('name', $domainName)->exists()) {
+        flash('Url already exists')->warning();
     } else {
         DB::table('domains')->insert(
             [
-                'name' => $domain,
+                'name' => $domainName,
                 'created_at' => Carbon::now()->toDateTimeString(),
                 'updated_at' => Carbon::now()->toDateTimeString()
             ]
@@ -53,26 +55,27 @@ Route::post('/domains', function (Request $request) {
         flash('Url has been added')->success();
     }
 
-    $id = DB::table('domains')->where('name', $domain)->value('id');
+    $id = DB::table('domains')->where('name', $domainName)->value('id');
     return redirect()->route('domains.show', ['id' => $id]);
 })->name('domains.store');
 
 Route::get('/domains/{id}', function ($id) {
-    $entity = DB::table('domains')->find($id);
+    $domain = DB::table('domains')->find($id);
     $checks = DB::table('domain_checks')
         ->where('domain_id', $id)
         ->get();
-    return view('domains.show', ['entity' => $entity, 'checks' => $checks]);
+    return view('domains.show', ['domain' => $domain, 'checks' => $checks]);
 })->name('domains.show');
 
 Route::post('/domains/{id}/checks', function ($id) {
-    $domain = DB::table('domains')
-        ->where('id', $id)
-        ->value('name');
+    $domain = DB::table('domains')->find($id);
 
-    $response_status = Http::get($domain)->status();
-
-    $document = new Document($domain, true);
+    $data = Http::get($domain->name);
+    $response_body = $data->body();
+    $response_status = $data->status();
+    
+    $document = new Document($response_body);
+    
     if ($document->has('h1')) {
         $h1 = $document->first('h1')->text();
     }
@@ -84,7 +87,7 @@ Route::post('/domains/{id}/checks', function ($id) {
     if ($document->has('meta[name=description][content]')) {
         $description = $document->first('meta[name=description][content]')->getAttribute('content');
     }
-
+    
     DB::table('domain_checks')->insert(
         [
             'domain_id' => $id,
