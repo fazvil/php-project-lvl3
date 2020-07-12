@@ -68,6 +68,8 @@ Route::get('/domains/{id}', function ($id) {
 })->name('domains.show');
 
 Route::post('/domains/{id}/checks', function ($id) {
+    dump('f');
+    /*
     $domain = DB::table('domains')->find($id);
 
     $data = Http::get($domain->name);
@@ -101,4 +103,5 @@ Route::post('/domains/{id}/checks', function ($id) {
     );
     flash('Website has been checked!')->success();
     return redirect()->route('domains.show', ['id' => $id]);
+    */
 })->name('domains.checks');
