@@ -10,7 +10,7 @@
 @section('container')
     <div class="flex-center">
         <div class="content">
-            <h1>Page Analyzer</h1>
+            <h1>Page</h1>
             <h4>Check web pages for free</h4>
             <div>
                 <form action="{{ route('domains.store') }}" method="POST">
