@@ -10,6 +10,7 @@ use DiDom\Document;
 use GuzzleHttp\Client;
 
 Route::get('/', function () {
+    Http::fake();
     return view('index');
 })->name('index');
 
@@ -97,7 +98,7 @@ Route::post('/domains/{id}/checks', function ($id) {
         [
             'domain_id' => $id,
             'status_code' => $response_status,
-            'h1' => 'fff',
+            'h1' => $h1 ?? null,
             'keywords' => $keywords ?? null,
             'description' => $description ?? null,
             'created_at' => Carbon::now()->toDateTimeString(),
