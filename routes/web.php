@@ -97,7 +97,7 @@ Route::post('/domains/{id}/checks', function ($id) {
         [
             'domain_id' => $id,
             'status_code' => $response_status,
-            'h1' => $h1 ?? null,
+            'h1' => 'fff',
             'keywords' => $keywords ?? null,
             'description' => $description ?? null,
             'created_at' => Carbon::now()->toDateTimeString(),
