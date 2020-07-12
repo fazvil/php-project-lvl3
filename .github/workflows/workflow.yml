@@ -14,15 +14,6 @@ jobs:
       - name: Setup project
         run: make setup 
         
-      - name: Directory Permissions
-        run: chmod -R 777 storage bootstrap/cache
-          
-      - name: Create table
-        env:
-          DB_CONNECTION: sqlite
-          DB_DATABASE: database/database.sqlite
-        run: php artisan migrate
-        
       - name: Execute tests (Unit and Feature tests) via PHPUnit
         run: make test
         
