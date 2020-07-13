@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use DiDom\Document;
-use GuzzleHttp\Client;
 
 Route::get('/', function () {
     return view('index');
