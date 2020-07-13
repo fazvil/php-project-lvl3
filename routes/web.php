@@ -69,17 +69,11 @@ Route::get('/domains/{id}', function ($id) {
 
 Route::post('/domains/{id}/checks', function ($id) {
     $domain = DB::table('domains')->find($id); 
-    /*
-    $data = Http::get($domain->name);
     
+    $data = Http::get($domain->name);
     $response_body = $data->body();
     $response_status = $data->status();
-    */
-    $client = new Client();
-    $response = $client->get($domain->name);
-    $code = $response->getStatusCode();
-    dump($code);
-    /*
+
     $document = new Document($response_body);
     
     if ($document->has('h1')) {
@@ -107,5 +101,5 @@ Route::post('/domains/{id}/checks', function ($id) {
     );
     flash('Website has been checked!')->success();
     return redirect()->route('domains.show', ['id' => $id]);
-    */
+    
 })->name('domains.checks');
