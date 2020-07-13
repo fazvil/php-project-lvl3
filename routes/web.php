@@ -101,5 +101,4 @@ Route::post('/domains/{id}/checks', function ($id) {
     );
     flash('Website has been checked!')->success();
     return redirect()->route('domains.show', ['id' => $id]);
-    
 })->name('domains.checks');
