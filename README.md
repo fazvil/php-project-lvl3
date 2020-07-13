@@ -2,4 +2,4 @@
 
 # Анализатор страниц
 
-https://php-projecl-lvl3.herokuapp.com/
+https://project-lvl3.herokuapp.com/
