@@ -20,11 +20,6 @@ class HandlerTest extends TestCase
         parent::setUp();
         $this->faker = Factory::create();
     }
-
-    public function testMainIndex()
-    {
-        $this->get(route('index'))->assertOk();
-    }
     
     public function testDomainStore()
     {
@@ -42,12 +37,9 @@ class HandlerTest extends TestCase
     public function testDomainsIndex()
     {
         $this->post(route('domains.store'), ['domainName' => $this->faker->url]);
-        $this->post(route('domains.store'), ['domainName' => $this->faker->url]);
 
         $response = $this->get(route('domains.index'));
         $response->assertOk();
-
-        $this->assertDatabaseCount('domains', 2);
     }
     
     public function testDomainShow()
