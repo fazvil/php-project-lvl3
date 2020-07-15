@@ -13,8 +13,6 @@ use GuzzleHttp\Client;
 
 class HandlerTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected $faker;
 
     public function setUp(): void
