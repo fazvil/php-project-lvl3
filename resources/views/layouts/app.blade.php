@@ -15,6 +15,7 @@
         <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
+        @include('flash::message')
         @section('sidebar')
             <header>
                 <a class="links" href="{{ route('index') }}">Home</a>

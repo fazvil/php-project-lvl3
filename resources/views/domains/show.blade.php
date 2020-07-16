@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-@include('flash::message')
-
 @section('container')
     <div class="full-height">
     <h2> Site: {{ $domain->name }}</h2>

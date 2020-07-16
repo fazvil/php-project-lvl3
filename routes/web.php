@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use DiDom\Document;
-use GuzzleHttp\Client;
 
 Route::get('/', function () {
     return view('index');
@@ -76,25 +75,17 @@ Route::post('/domains/{id}/checks', function ($id) {
 
     $document = new Document($response_body);
     
-    if ($document->has('h1')) {
-        $h1 = $document->first('h1')->text();
-    }
-
-    if ($document->has('meta[name=keywords][content]')) {
-        $keywords = $document->first('meta[name=keywords][content]')->getAttribute('content');
-    }
-
-    if ($document->has('meta[name=description][content]')) {
-        $description = $document->first('meta[name=description][content]')->getAttribute('content');
-    }
+    $h1 = optional($document->first('h1'))->text();
+    $keywords = optional($document->first('meta[name=keywords]'))->attr('content');
+    $description = optional($document->first('meta[name=description]'))->attr('content');
     
     DB::table('domain_checks')->insert(
         [
             'domain_id' => $id,
             'status_code' => $response_status,
-            'h1' => $h1 ?? null,
-            'keywords' => $keywords ?? null,
-            'description' => $description ?? null,
+            'h1' => $h1,
+            'keywords' => $keywords,
+            'description' => $description,
             'created_at' => Carbon::now()->toDateTimeString(),
             'updated_at' => Carbon::now()->toDateTimeString()
         ]
