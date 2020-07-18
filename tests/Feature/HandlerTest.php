@@ -7,66 +7,72 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Faker\Factory;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Http;
-use GuzzleHttp\Client;
 
 class HandlerTest extends TestCase
 {
-    protected $faker;
+    protected $fakeUrl;
+    protected $id;
+    protected $url = 'http://www.youtube.com';
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->faker = Factory::create();
+        $this->fakeUrl = Factory::create()->url;
+        $this->id = DB::table('domains')->insertGetId(
+            [
+                'name' => $this->url,
+                'created_at' => '2020-02-20',
+                'updated_at' => '2020-02-20'
+            ]
+        );
+        DB::table('domain_checks')->insert(
+            [
+                'domain_id' => $this->id,
+                'status_code' => 200,
+                'h1' => null,
+                'keywords' => null,
+                'description' => null,
+                'created_at' => '2020-02-20',
+                'updated_at' => '2020-02-20'
+            ]
+        );
     }
     
-    public function testDomainStore()
+    public function testMainIndex()
     {
-        $url = $this->faker->url;
-        $response = $this->post(route('domains.store'), ['domainName' => $url]);
-
-        $response->assertSessionHasNoErrors();
-        $response->assertRedirect();
-
-        $this->assertDatabaseHas('domains', [
-            'name' => $url
-        ]);
+        $response = $this->get(route('index'));
+        $response->assertOk();
     }
 
-    public function testDomainsIndex()
+    public function testIndex()
     {
-        $this->post(route('domains.store'), ['domainName' => $this->faker->url]);
-
         $response = $this->get(route('domains.index'));
         $response->assertOk();
     }
-    
-    public function testDomainShow()
+
+    public function testStore()
     {
-        $url = $this->faker->url;
-        $this->post(route('domains.store'), ['domainName' => $url]);
+        $response = $this->post(route('domains.store'), ['domainName' => $this->fakeUrl]);
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect();
 
-        $id = DB::table('domains')->where('name', $url)->value('id');
-        $response = $this->get(route('domains.store', ['id', $id]));
-
+        $this->assertDatabaseHas('domains', ['name' => $this->fakeUrl]);
+    }
+    
+    public function testShow()
+    {
+        $response = $this->get(route('domains.show', ['id' => $this->id]));
         $response->assertOk();
     }
     
-    public function testDomainCheck()
+    public function testCheck()
     {
-        $url = $this->faker->url;
         $testHtml = file_get_contents(__DIR__ . '/../fixtures/test.html');
-
         Http::fake([
-            $url => Http::response($testHtml, 200)
+            $this->url => Http::response($testHtml, 200)
         ]);
-
-        $this->post(route('domains.store'), ['domainName' => $url]);
-
-        $id = DB::table('domains')->where('name', $url)->value('id');
-        $response = $this->post(route('domains.checks', ['id' => $id]));
-
+        $response = $this->post(route('domains.checks', ['id' => $this->id]));
         $response->assertSessionHasNoErrors();
         $response->assertRedirect();
 

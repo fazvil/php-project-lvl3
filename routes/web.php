@@ -44,7 +44,7 @@ Route::post('/domains', function (Request $request) {
     if (DB::table('domains')->where('name', $domainName)->exists()) {
         flash('Url already exists')->warning();
     } else {
-        DB::table('domains')->insert(
+        $id = DB::table('domains')->insertGetId(
             [
                 'name' => $domainName,
                 'created_at' => Carbon::now()->toDateTimeString(),
@@ -53,8 +53,6 @@ Route::post('/domains', function (Request $request) {
         );
         flash('Url has been added')->success();
     }
-
-    $id = DB::table('domains')->where('name', $domainName)->value('id');
     return redirect()->route('domains.show', ['id' => $id]);
 })->name('domains.store');
 
