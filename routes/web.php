@@ -57,6 +57,9 @@ Route::post('/domains', function (Request $request) {
 })->name('domains.store');
 
 Route::get('/domains/{id}', function ($id) {
+    if (DB::table('domains')->where('id', $id)->doesntExist()) {
+        abort(404);
+    }
     $domain = DB::table('domains')->find($id);
     $checks = DB::table('domain_checks')
         ->where('domain_id', $id)

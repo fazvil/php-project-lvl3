@@ -11,14 +11,12 @@ use Illuminate\Support\Facades\Http;
 
 class HandlerTest extends TestCase
 {
-    protected $fakeUrl;
-    protected $id;
-    protected $url = 'http://www.youtube.com';
+    private $id;
+    private $url = 'http://www.youtube.com';
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->fakeUrl = Factory::create()->url;
         $this->id = DB::table('domains')->insertGetId(
             [
                 'name' => $this->url,
@@ -53,11 +51,12 @@ class HandlerTest extends TestCase
 
     public function testStore()
     {
-        $response = $this->post(route('domains.store'), ['domainName' => $this->fakeUrl]);
+        $url = Factory::create()->url;
+        $response = $this->post(route('domains.store'), ['domainName' => $url]);
         $response->assertSessionHasNoErrors();
         $response->assertRedirect();
 
-        $this->assertDatabaseHas('domains', ['name' => $this->fakeUrl]);
+        $this->assertDatabaseHas('domains', ['name' => $url]);
     }
     
     public function testShow()
