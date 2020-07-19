@@ -13,26 +13,18 @@ Route::get('/', function () {
 })->name('index');
 
 Route::get('/domains', function () {
-    /*
     $latestChecks = DB::table('domain_checks')
-                   ->select('domain_id', DB::raw('MAX(created_at) as last_check'))
-                   ->groupBy('domain_id');
+        ->select('domain_id', 'created_at as last_check_created_at', 'status_code')
+        ->orderBy('domain_id')
+        ->orderByDesc('created_at')
+        ->distinct('domain_id');
+
     $domains = DB::table('domains')
         ->leftJoinSub($latestChecks, 'latest_check', function ($join) {
             $join->on('domains.id', '=', 'latest_check.domain_id');
         })->get();
-    */
-    
-    $domains = DB::table('domains')->get();
 
-    $lastChecks = DB::table('domain_checks')->pluck('created_at', 'domain_id');
-    $statusCodes = DB::table('domain_checks')->pluck('status_code', 'domain_id');
-
-    return view('domains.index', [
-        'domains' => $domains,
-        'lastChecks' => $lastChecks,
-        'statusCodes' => $statusCodes
-    ]);
+    return view('domains.index', ['domains' => $domains]);
 })->name('domains.index');
 
 Route::post('/domains', function (Request $request) {
@@ -53,6 +45,7 @@ Route::post('/domains', function (Request $request) {
         );
         flash('Url has been added')->success();
     }
+
     return redirect()->route('domains.show', ['id' => $id]);
 })->name('domains.store');
 
@@ -60,10 +53,12 @@ Route::get('/domains/{id}', function ($id) {
     if (DB::table('domains')->where('id', $id)->doesntExist()) {
         abort(404);
     }
+
     $domain = DB::table('domains')->find($id);
     $checks = DB::table('domain_checks')
         ->where('domain_id', $id)
         ->get();
+
     return view('domains.show', ['domain' => $domain, 'checks' => $checks]);
 })->name('domains.show');
 
@@ -91,5 +86,6 @@ Route::post('/domains/{id}/checks', function ($id) {
         ]
     );
     flash('Website has been checked!')->success();
+    
     return redirect()->route('domains.show', ['id' => $id]);
 })->name('domains.checks');

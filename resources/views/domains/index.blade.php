@@ -11,7 +11,7 @@
                 <td class="columnId">Status Code</td>
             </tr>
             @foreach ($domains as $item)
-                <tr>
+                <tr> 
                     <td>
                         {{ $item->id }}
                     </td>
@@ -19,14 +19,10 @@
                         <a href="{{ route('domains.show', ['id' => $item->id]) }}">{{ $item->name }}</a>
                     </td>
                     <td>
-                        @isset($lastChecks[$item->id])
-                            {{ $lastChecks[$item->id] }}
-                        @endisset
+                        {{ $item->last_check_created_at }}
                     </td>
                     <td>
-                        @isset($statusCodes[$item->id])
-                            {{ $statusCodes[$item->id] }}
-                        @endisset
+                        {{ $item->status_code }}
                     </td>
                 </tr>
             @endforeach
