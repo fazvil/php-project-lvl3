@@ -13,18 +13,16 @@ Route::get('/', function () {
 })->name('index');
 
 Route::get('/domains', function () {
-    $latestChecks = DB::table('domain_checks')
-        ->select('domain_id', 'created_at as last_check_created_at', 'status_code')
+    $domains = DB::table('domains')->get();
+    $lastChecks = DB::table('domain_checks')
+        ->select('domain_id', 'created_at', 'status_code')
         ->orderBy('domain_id')
         ->orderByDesc('created_at')
-        ->distinct('domain_id');
-
-    $domains = DB::table('domains')
-        ->leftJoinSub($latestChecks, 'latest_check', function ($join) {
-            $join->on('domains.id', '=', 'latest_check.domain_id');
-        })->get();
-
-    return view('domains.index', ['domains' => $domains]);
+        ->distinct('domain_id')
+        ->get()
+        ->keyBy('domain_id');
+        
+    return view('domains.index', ['domains' => $domains, 'lastChecks' => $lastChecks]);
 })->name('domains.index');
 
 Route::post('/domains', function (Request $request) {
@@ -50,14 +48,8 @@ Route::post('/domains', function (Request $request) {
 })->name('domains.store');
 
 Route::get('/domains/{id}', function ($id) {
-    if (DB::table('domains')->where('id', $id)->doesntExist()) {
-        abort(404);
-    }
-
-    $domain = DB::table('domains')->find($id);
-    $checks = DB::table('domain_checks')
-        ->where('domain_id', $id)
-        ->get();
+    $domain = DB::table('domains')->find($id) ?? abort(404);
+    $checks = DB::table('domain_checks')->where('domain_id', $id)->get();
 
     return view('domains.show', ['domain' => $domain, 'checks' => $checks]);
 })->name('domains.show');

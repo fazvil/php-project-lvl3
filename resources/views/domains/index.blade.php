@@ -10,19 +10,19 @@
                 <td class="columnId">Last check</td>
                 <td class="columnId">Status Code</td>
             </tr>
-            @foreach ($domains as $item)
+            @foreach ($domains as $domain)
                 <tr> 
                     <td>
-                        {{ $item->id }}
+                        {{ $domain->id }}
                     </td>
                     <td>
-                        <a href="{{ route('domains.show', ['id' => $item->id]) }}">{{ $item->name }}</a>
+                        <a href="{{ route('domains.show', ['id' => $domain->id]) }}">{{ $domain->name }}</a>
                     </td>
                     <td>
-                        {{ $item->last_check_created_at }}
+                        {{ $lastChecks[$domain->id]->created_at ?? '' }}
                     </td>
                     <td>
-                        {{ $item->status_code }}
+                        {{ $lastChecks[$domain->id]->status_code ?? '' }}
                     </td>
                 </tr>
             @endforeach
