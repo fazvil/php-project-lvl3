@@ -48,7 +48,8 @@ Route::post('/domains', function (Request $request) {
 })->name('domains.store');
 
 Route::get('/domains/{id}', function ($id) {
-    abort_unless($domain = DB::table('domains')->find($id), 404);
+    $domain = DB::table('domains')->find($id);
+    abort_unless($domain, 404);
     $checks = DB::table('domain_checks')->where('domain_id', $id)->get();
 
     return view('domains.show', ['domain' => $domain, 'checks' => $checks]);
